@@ -1,0 +1,411 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Error {
+    field: String
+    message: String
+}
+
+type InventoryAttr {
+    "The count of inventory available. Will be present if and only if type is finite."
+    quantity: Int
+    "Possible values are finite, bucket (not quantified), and infinite."
+    type: String
+    "An indicator of the inventory available. Possible values are in_stock, limited, and out_of_stock. Will be present if and only if type is bucket."
+    value: String
+}
+
+type Invoice {
+    amount_due: Int!
+    amount_paid: Int!
+    id: ID
+    lines: [InvoiceLineItem!]!
+}
+
+type InvoiceLineItem {
+    amount: Int!
+    currency: String!
+    "Unique identifier for the object."
+    id: ID!
+    "String representing the object's type."
+    object: String!
+    quantity: Int!
+}
+
+type Metadata {
+    """
+    Set of key-value pairs that you can attach to an object. This can be useful
+    for storing additional information about the object in a structured format.
+    """
+    metadata: MetadataType
+}
+
+type MetadataType {
+    key: String
+    value: String
+}
+
+type Mutation {
+    login(email: String): String
+    productUpdate(id: ID!, input: ProductInput!): ProductUpdate
+}
+
+type PackageDimensions {
+    "Height, in inches."
+    height: Float!
+    "Length, in inches."
+    length: Float!
+    "Weight, in ounces."
+    weight: Float!
+    "Width, in inches."
+    width: Float!
+}
+
+type Plan {
+    "Whether the plan is currently available for new subscriptions."
+    active: Boolean!
+    """
+    Specifies a usage aggregation strategy for plans of usage_`type=metered`.
+    Allowed values are `sum` for summing up all usage during a period,
+    `last_during_period` for picking the last usage record reported within a
+    period, `last_ever` for picking the last usage record ever (across period
+    bounds) or `max` which picks the usage record with the maximum reported usage
+    during a period. Defaults to `sum`.
+    """
+    aggregate_usage: String
+    "The amount in cents to be charged on the interval specified."
+    amount: Int
+    "Same as amount, but contains a decimal value with at most 12 decimal places."
+    amount_decimal: String
+    """
+    Describes how to compute the price per period. Either `per_unit` or `tiered`.
+    `per_unit` indicates that the fixed amount (specified in `amount`) will be
+    charged per unit in `quantity` (for plans with `usage_type=licensed`), or per
+    unit of total usage (for plans with `usage_type=metered`). `tiered` indicates
+    that the unit pricing will be computed using a tiering strategy as defined
+    using the `tiers` and `tiers_mode` attributes.
+    """
+    billing_scheme: String!
+    "Time at which the object was created. Measured in seconds since the Unix epoch."
+    created: Int!
+    """
+    Three-letter [ISO currency
+    code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase. Must be
+    a [supported currency](https://stripe.com/docs/currencies).
+    """
+    currency: String!
+    formattedAmount: String
+    "Unique identifier for the object."
+    id: ID!
+    "One of `day`, `week`, `month` or `year`. The frequency with which a subscription should be billed."
+    interval: String!
+    """
+    The number of intervals (specified in the `interval` property) between
+    subscription billings. For example, `interval=month` and `interval_count=3`
+    bills every 3 months.
+    """
+    interval_count: Int!
+    "Has the value true if the object exists in live mode or the value false if the object exists in test mode."
+    livemode: Boolean!
+    """
+    Set of key-value pairs that you can attach to an object. This can be useful
+    for storing additional information about the object in a structured format.
+    """
+    metadata: [MetadataType]
+    "A brief description of the plan, hidden from customers."
+    nickname: String
+    "String representing the object's type."
+    object: String!
+    "The product whose pricing this plan determines."
+    product: Product!
+    """
+    Each element represents a pricing tier. This parameter requires
+    `billing_scheme` to be set to `tiered`. See also the documentation for
+    `billing_scheme`.
+    """
+    tiers: [Tier!]
+    """
+    Defines if the tiering price should be `graduated` or `volume` based. In
+    `volume`-based tiering, the maximum quantity within a period determines the
+    per unit price, in `graduated` tiering pricing can successively change as the
+    quantity grows.
+    """
+    tiers_mode: String
+    """
+    Apply a transformation to the reported usage or set quantity before computing
+    the billed price. Cannot be combined with `tiers`.
+    """
+    transform_usage: TransformUsage
+    "Default number of trial days when subscribing a customer to this plan using `trial_from_plan=true`."
+    trial_period_days: Int
+    """
+    Configures how the quantity per period should be determined, can be either
+    `metered` or `licensed`. `licensed` will automatically bill the `quantity` set
+    for a plan when adding it to a subscription, `metered` will aggregate the
+    total usage based on usage records. Defaults to `licensed`.
+    """
+    usage_type: String!
+}
+
+type Product {
+    "Whether the product is currently available for purchase."
+    active: Boolean!
+    """
+    A list of up to 5 attributes that each SKU can provide values for (e.g.,
+    `[\"color\", \"size\"]`). Only applicable to products of `type=good`.
+    """
+    attributes: [String!]!
+    """
+    A short one-line description of the product, meant to be displayable to the
+    customer. Only applicable to products of `type=good`.
+    """
+    caption: String
+    "Time at which the object was created. Measured in seconds since the Unix epoch."
+    created: Date!
+    "An array of connect application identifiers that cannot purchase this product. Only applicable to products of `type=good`."
+    deactivate_on: [String!]!
+    "The productâs description, meant to be displayable to the customer. Only applicable to products of `type=good`."
+    description: String
+    "Unique identifier for the object."
+    id: ID!
+    """
+    A list of up to 8 URLs of images for this product, meant to be displayable to
+    the customer. Only applicable to products of `type=good`.
+    """
+    images: [String!]!
+    "Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode."
+    livemode: Boolean!
+    """
+    Set of key-value pairs that you can attach to an object. This can be useful
+    for storing additional information about the object in a structured format.
+    """
+    metadata: MetadataType
+    "The productâs name, meant to be displayable to the customer. Applicable to both `service` and `good` types."
+    name: String!
+    "String representing the objectâs type. Objects of the same type share the same value."
+    object: String!
+    """
+    The dimensions of this product for shipping purposes. A SKU associated with
+    this product can override this value by having its own `package_dimensions`.
+    Only applicable to products of `type=good`.
+    """
+    package_dimensions: PackageDimensions
+    "Whether this product is a shipped good. Only applicable to products of `type=good`."
+    shippable: Boolean!
+    """
+    The type of the product. The product is either of type good, which is eligible
+    for use with Orders and SKUs, or `service`, which is eligible for use with
+    Subscriptions and Plans.
+    """
+    type: String!
+    updated: Int!
+    "A URL of a publicly-accessible webpage for this product. Only applicable to products of `type=good`."
+    url: String!
+}
+
+"""
+Simple wrapper around our list of launches that contains a cursor to the
+last item in the list. Pass this cursor to the launches query to fetch results
+after these.
+"""
+type ProductConnection {
+    cursor: String!
+    hasMore: Boolean!
+    products: [Product]!
+}
+
+type ProductError {
+    code: ProductErrorCode
+    field: String
+    message: String
+}
+
+type ProductUpdate {
+    errors: [Error!]
+    id: ID!
+    product: Product
+    productErrors: [ProductError!]
+}
+
+type Query {
+    me: User
+    product(id: ID!): Product!
+    products: [Product!]!
+    sku(id: ID!): Sku!
+    skus: [Sku!]!
+    tiers: [Tier!]
+}
+
+type Rocket {
+    id: ID!
+    name: String
+    type: String
+}
+
+type Sku {
+    "Whether the SKU is available for purchase."
+    active: Boolean!
+    """
+    A dictionary of attributes and values for the attributes defined by the product. If, for example,
+    a productâs attributes are [\"size\", \"gender\"], a valid SKU has the following dictionary of attributes: {\"size\": \"Medium\", \"gender\": \"Unisex\"}.
+    """
+    attributes: skuAttributesAttr!
+    "Time at which the object was created. Measured in seconds since the Unix epoch."
+    created: Int!
+    "Three-letter ISO currency code, in lowercase. Must be a supported currency."
+    currency: String!
+    "Unique identifier for the object."
+    id: String!
+    "The URL of an image for this SKU, meant to be displayable to the customer."
+    image: String
+    "Description of the SKUâs inventory."
+    inventory: InventoryAttr
+    "Has the value true if the object exists in live mode or the value false if the object exists in test mode."
+    livemode: Boolean!
+    "Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format."
+    metadata: MetadataType
+    "String representing the object\\âs type. Objects of the same type share the same value. value is \\\"sku\\\"."
+    object: String!
+    "The dimensions of this SKU for shipping purposes."
+    package_dimensions: PackageDimensions
+    """
+    The cost of the item as a positive Int! in the smallest currency unit (that is, 100 cents to char
+    ge $1.00, or 100 to charge Â¥100, Japanese Yen being a zero-Float currency).
+    """
+    price: Int!
+    "The ID of the product this SKU is associated with. The product must be currently active."
+    product: String!
+    "Time at which the object was last updated. Measured in seconds since the Unix epoch."
+    updated: Int!
+}
+
+"""
+Defines if the tiering price should be `graduated` or `volume` based. In
+`volume`-based tiering, the maximum quantity within a period determines the
+per unit price, in `graduated` tiering pricing can successively change as the
+quantity grows.
+"""
+type Tier {
+    "Price for the entire tier."
+    flat_amount: Int!
+    "Same as flat_amount, but contains a decimal value with at most 12 decimal places."
+    flat_amount_decimal: String!
+    "Per unit price for units relevant to the tier."
+    unit_amount: Int!
+    "Same as unit_amount, but contains a decimal value with at most 12 decimal places."
+    unit_amount_decimal: String!
+    "Up to and including to this quantity will be contained in the tier."
+    up_to: Int!
+}
+
+type TransformUsage {
+    "Divide usage by this number."
+    divide_by: Int!
+    "After division, either round the result `up` or `down`."
+    round: String!
+}
+
+type User {
+    _id: String
+    _rev: String
+    email: String
+    id: ID!
+    name: String
+    object: String
+    profileImage: String
+    rev: String!
+}
+
+type skuAttributesAttr {
+    String: String
+}
+
+enum CacheControlScope {
+    PRIVATE
+    PUBLIC
+}
+
+enum LEGAL_ENTITY_TYPE {
+    company
+    individual
+}
+
+enum ProductErrorCode {
+    ALREADY_EXISTS
+    ATTRIBUTE_ALREADY_ASSIGNED
+    ATTRIBUTE_CANNOT_BE_ASSIGNED
+    ATTRIBUTE_VARIANTS_DISABLED
+    GRAPHQL_ERROR
+    INVALID
+    NOT_FOUND
+    NOT_PRODUCTS_IMAGE
+    REQUIRED
+    UNIQUE
+    VARIANT_NO_DIGITAL_CONTENT
+}
+
+input AttributeValueInput {
+    values: [String]!
+}
+
+input PackageDimensionsInput {
+    "Height, in inches."
+    height: Float
+    "Length, in inches."
+    length: Float
+    "Weight, in ounces."
+    weight: Float
+    "Width, in inches."
+    width: Float
+}
+
+input ProductInput {
+    "Whether the product is currently available for purchase."
+    active: Boolean
+    """
+    A list of up to 5 attributes that each SKU can provide values for (e.g.,
+    `[\"color\", \"size\"]`). Only applicable to products of `type=good`.
+    """
+    attributes: [AttributeValueInput]
+    """
+    A short one-line description of the product, meant to be displayable to the
+    customer. Only applicable to products of `type=good`.
+    """
+    caption: String
+    "An array of connect application identifiers that cannot purchase this product. Only applicable to products of `type=good`."
+    deactivate_on: [String]
+    "The productâs description, meant to be displayable to the customer. Only applicable to products of `type=good`."
+    description: String
+    """
+    A list of up to 8 URLs of images for this product, meant to be displayable to
+    the customer. Only applicable to products of `type=good`.
+    """
+    images: [String]
+    """
+    Set of key-value pairs that you can attach to an object. This can be useful
+    for storing additional information about the object in a structured format.
+    """
+    metadata: [AttributeValueInput]
+    "The productâs name, meant to be displayable to the customer. Applicable to both `service` and `good` types."
+    name: String
+    """
+    The dimensions of this product for shipping purposes. A SKU associated with
+    this product can override this value by having its own `package_dimensions`.
+    Only applicable to products of `type=good`.
+    """
+    package_dimensions: PackageDimensionsInput
+    "Whether this product is a shipped good. Only applicable to products of `type=good`."
+    shippable: Boolean
+    "A URL of a publicly-accessible webpage for this product. Only applicable to products of `type=good`."
+    url: String
+}
+
+
+scalar Date
+
+"The `Upload` scalar type represents a file upload."
+scalar Upload
