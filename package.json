@@ -9,7 +9,7 @@
     "@testing-library/user-event": "^7.1.2",
     "apollo-boost": "^0.4.7",
     "graphql": "^14.6.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "react": "^16.13.0",
     "react-datetime": "^2.16.3",
     "react-dom": "^16.13.0",
